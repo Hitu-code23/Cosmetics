@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lumière — Beauty That Feels Natural</title>
+<meta name="description" content="Premium skincare and beauty essentials designed for confidence, simplicity, and glow." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+<style>
+:root{
+  --cream:#fffaf5; --beige:#f7efe5; --blush:#f6d6d6; --lavender:#e7dff5;
+  --peach:#f3d2c1; --gold:#d6b98c;
+  --fg:#3a2f28; --fg-65:rgba(58,47,40,.65); --fg-55:rgba(58,47,40,.55);
+  --fg-50:rgba(58,47,40,.5); --fg-45:rgba(58,47,40,.45); --fg-20:rgba(58,47,40,.2);
+  --fg-10:rgba(58,47,40,.1);
+  --font-display:"Playfair Display", Georgia, serif;
+  --font-sans:"Inter", system-ui, sans-serif;
+  --shadow-luxe: 0 30px 60px -25px rgba(170,130,100,.18), 0 10px 30px -15px rgba(170,130,100,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--cream);color:var(--fg);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;scroll-behavior:smooth}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-.01em;font-weight:500}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+em{font-style:normal;color:var(--fg-65)}
+
+.glass{background:rgba(255,255,255,.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(255,255,255,.6)}
+.shadow-luxe{box-shadow:var(--shadow-luxe)}
+.grain{background-image:radial-gradient(rgba(0,0,0,.025) 1px,transparent 1px);background-size:3px 3px}
+.container{max-width:80rem;margin:0 auto;padding:0 1.5rem}
+.eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:.25em;color:var(--fg-50)}
+
+/* ===== Animations ===== */
+@keyframes float-slow{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(0,-18px,0) rotate(2deg)}}
+@keyframes float-mid{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(10px,-12px,0) rotate(-3deg)}}
+@keyframes blob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,20px) scale(.97)}}
+@keyframes gradient-pan{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes hero-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-22px) rotate(2deg)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.animate-blob{animation:blob 18s ease-in-out infinite}
+.animate-gradient{background-size:200% 200%;animation:gradient-pan 14s ease infinite}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== Cursor Glow ===== */
+.cursor-glow{position:fixed;left:0;top:0;width:400px;height:400px;border-radius:50%;pointer-events:none;z-index:60;
+  background:radial-gradient(closest-side,rgba(246,214,214,.35),rgba(231,223,245,.15) 50%,transparent 70%);
+  mix-blend-mode:multiply;filter:blur(20px);display:none}
+@media(min-width:768px){.cursor-glow{display:block}}
+
+/* ===== Nav ===== */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;animation:fade-up .8s cubic-bezier(.22,1,.36,1) both}
+.nav-inner{max-width:80rem;margin:1rem auto 0;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;gap:1rem}
+.nav-pill{border-radius:999px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.5rem}
+.brand{font-family:var(--font-display);font-size:1.25rem}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block}
+.nav-links{display:none;gap:1.75rem;padding:.75rem 1.5rem}
+.nav-links a{font-size:13px;color:var(--fg-65);transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+.nav-actions{display:flex;align-items:center;gap:.25rem;padding:.5rem .75rem}
+.icon-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;transition:background .2s;position:relative}
+.icon-btn:hover{background:rgba(255,255,255,.6)}
+.icon-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.7;fill:none}
+.cart-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+@media(min-width:768px){.nav-links{display:flex}.menu-btn{display:none}}
+
+/* ===== Hero ===== */
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:8rem 1.5rem 6rem}
+@media(min-width:768px){.hero{padding:11rem 1.5rem 8rem}}
+.hero-bg{position:absolute;inset:0;z-index:-2;
+  background:linear-gradient(120deg,#fffaf5 0%,#f7efe5 25%,#f6d6d6 55%,#e7dff5 80%,#fffaf5 100%);
+  background-size:200% 200%;animation:gradient-pan 14s ease infinite}
+.blob{position:absolute;z-index:-1;border-radius:50%;filter:blur(80px);pointer-events:none}
+.blob-1{left:-8rem;top:5rem;width:28rem;height:28rem;background:rgba(246,214,214,.6);animation:blob 18s ease-in-out infinite}
+.blob-2{right:-6rem;top:10rem;width:24rem;height:24rem;background:rgba(231,223,245,.6);animation:blob 18s ease-in-out -6s infinite}
+.blob-3{left:33%;bottom:0;width:22rem;height:22rem;background:rgba(243,210,193,.5);animation:blob 18s ease-in-out -12s infinite}
+.particles{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.particles span{position:absolute;border-radius:50%;background:rgba(255,255,255,.7);filter:blur(1px);opacity:.7}
+
+.hero-grid{max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr;gap:3rem;align-items:center}
+@media(min-width:768px){.hero-grid{grid-template-columns:7fr 5fr}}
+
+.chip{display:inline-flex;align-items:center;gap:.5rem;border-radius:999px;padding:.4rem 1rem;font-size:12px;color:var(--fg-65);animation:fade-up .8s cubic-bezier(.22,1,.36,1) both}
+.hero h1{font-size:clamp(3rem,7vw,5.5rem);line-height:1.05;margin-top:1.5rem;text-wrap:balance;animation:fade-up 1s cubic-bezier(.22,1,.36,1) .1s both}
+.hero p.lead{margin-top:1.5rem;max-width:36rem;font-size:1.05rem;line-height:1.7;color:var(--fg-65);animation:fade-up .9s cubic-bezier(.22,1,.36,1) .25s both}
+.cta-row{margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:1rem;animation:fade-up .9s cubic-bezier(.22,1,.36,1) .4s both}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:1rem 2rem;font-size:14px;font-weight:500;letter-spacing:.02em;transition:background .2s,transform .15s;will-change:transform}
+.btn-primary{background:var(--fg);color:var(--cream);box-shadow:var(--shadow-luxe)}
+.btn-primary:hover{background:#2b231e}
+.btn-ghost{border:1px solid var(--fg-20);background:rgba(255,255,255,.6);backdrop-filter:blur(10px);color:var(--fg)}
+.btn-ghost:hover{background:#fff}
+
+.trust{margin-top:3.5rem;display:flex;align-items:center;gap:2rem;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--fg-45);flex-wrap:wrap;animation:fade-up 1s 1s both}
+.trust .ln{width:40px;height:1px;background:var(--fg-20)}
+
+.hero-stage{position:relative;height:480px}
+@media(min-width:768px){.hero-stage{height:600px}}
+.hero-main{position:absolute;left:50%;top:50%;width:420px;height:420px;transform:translate(-50%,-50%);perspective:1200px}
+.hero-main img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 40px 60px rgba(180,130,90,.25));animation:hero-float 7s ease-in-out infinite}
+.hero-float-a{position:absolute;left:0;top:2.5rem;width:10rem;height:10rem;animation:float-slow 6s ease-in-out infinite;filter:drop-shadow(0 25px 30px rgba(220,170,170,.4))}
+.hero-float-b{position:absolute;bottom:1.5rem;right:0;width:11rem;height:11rem;animation:float-mid 8s ease-in-out infinite;filter:drop-shadow(0 25px 30px rgba(214,185,140,.35))}
+
+/* ===== Section heads ===== */
+section.block{padding:7rem 1.5rem;position:relative}
+@media(min-width:768px){section.block{padding:9rem 1.5rem}}
+h2.title{font-size:clamp(2.25rem,5vw,3.75rem);line-height:1.05;margin-top:.75rem;text-wrap:balance}
+
+/* ===== Featured grid ===== */
+.feat-head{display:flex;flex-direction:column;gap:1.5rem;justify-content:space-between;align-items:flex-start}
+@media(min-width:768px){.feat-head{flex-direction:row;align-items:flex-end}}
+.cats{display:flex;flex-wrap:wrap;gap:.5rem}
+.cat{border-radius:999px;padding:.5rem 1rem;font-size:12px;letter-spacing:.02em;transition:all .2s;color:var(--fg-65)}
+.cat.active{background:var(--fg);color:var(--cream)}
+.cat:not(.active){background:rgba(255,255,255,.55);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.6)}
+.cat:not(.active):hover{color:var(--fg)}
+
+.prod-grid{margin-top:3.5rem;display:grid;grid-template-columns:1fr;gap:1.5rem}
+@media(min-width:640px){.prod-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1280px){.prod-grid{grid-template-columns:repeat(4,1fr)}}
+
+.card{position:relative;overflow:hidden;border-radius:1.5rem;background:#fff;padding:1.25rem;box-shadow:var(--shadow-luxe);transition:transform .3s cubic-bezier(.22,1,.36,1);transform-style:preserve-3d;perspective:900px}
+.card:hover{transform:translateY(-8px)}
+.card-img{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:1rem;background:linear-gradient(135deg,var(--blush) 0%,var(--cream) 100%)}
+.card-img.tone-peach{background:linear-gradient(135deg,var(--peach) 0%,var(--cream) 100%)}
+.card-img.tone-beige{background:linear-gradient(135deg,var(--beige) 0%,var(--cream) 100%)}
+.card-img.tone-lavender{background:linear-gradient(135deg,var(--lavender) 0%,var(--cream) 100%)}
+.card-img .gr{position:absolute;inset:0;opacity:.4;background-image:radial-gradient(rgba(0,0,0,.025) 1px,transparent 1px);background-size:3px 3px}
+.card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:1.5rem;transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.card:hover .card-img img{transform:scale(1.1)}
+.tag{position:absolute;left:1rem;top:1rem;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);padding:.25rem .75rem;border-radius:999px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg-65)}
+.card-meta{margin-top:1.25rem;display:flex;align-items:flex-end;justify-content:space-between;gap:.75rem}
+.card-meta h3{font-size:1.25rem;line-height:1.2}
+.card-meta .sub{margin-top:.25rem;font-size:12px;color:var(--fg-55)}
+.price{font-family:var(--font-display);font-size:1.125rem}
+.price-old{font-size:13px;color:var(--fg-50);text-decoration:line-through;text-align:right}
+
+/* ===== About ===== */
+.about-grid{max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr;gap:3.5rem;align-items:center}
+@media(min-width:768px){.about-grid{grid-template-columns:1fr 1fr;gap:5rem}}
+.about-img-wrap{position:relative}
+.about-img{position:relative;overflow:hidden;border-radius:2rem;box-shadow:var(--shadow-luxe)}
+.about-img img{height:520px;width:100%;object-fit:cover}
+@media(min-width:768px){.about-img img{height:640px}}
+.about-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(255,250,245,.4),transparent)}
+.about-badge{position:absolute;bottom:-2rem;right:-1rem;max-width:240px;border-radius:1.5rem;padding:1.25rem;box-shadow:var(--shadow-luxe)}
+@media(min-width:768px){.about-badge{right:-3rem}}
+.about-badge .big{font-family:var(--font-display);font-size:1.875rem;line-height:1}
+.about-badge .big span{color:var(--gold)}
+.stat-grid{margin-top:2.5rem;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;max-width:28rem}
+.stat-grid .k{font-family:var(--font-display);font-size:1.5rem}
+.stat-grid .v{margin-top:.25rem;font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--fg-55)}
+
+/* ===== Best sellers ===== */
+.bs-head{max-width:80rem;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;padding:0 1.5rem}
+.scroll-btns{display:none;gap:.5rem}
+@media(min-width:768px){.scroll-btns{display:flex}}
+.scroll-btn{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;box-shadow:var(--shadow-luxe);transition:background .2s}
+.scroll-btn:hover{background:#fff}
+.scroll-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none}
+.bs-scroller{margin-top:3rem;display:flex;gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 1.5rem 2.5rem;scrollbar-width:none}
+.bs-scroller::-webkit-scrollbar{display:none}
+.bs-scroller > *{flex:0 0 280px;scroll-snap-align:start}
+@media(min-width:768px){.bs-scroller > *{flex:0 0 320px}.bs-scroller{padding-left:max(1.5rem,calc((100vw - 80rem)/2 + 1.5rem));padding-right:max(1.5rem,calc((100vw - 80rem)/2 + 1.5rem))}}
+
+/* ===== Testimonials ===== */
+.tm{position:relative;overflow:hidden}
+.tm-bg{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,#fffaf5 0%,#f7efe5 50%,#fffaf5 100%)}
+.tm-glow{position:absolute;left:50%;top:50%;width:40rem;height:40rem;transform:translate(-50%,-50%);border-radius:50%;background:rgba(246,214,214,.3);filter:blur(80px);z-index:-1;pointer-events:none}
+.tm-head{max-width:48rem;margin:0 auto;text-align:center}
+.tm-track-wrap{margin-top:4rem;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tm-track{display:flex;gap:1.5rem;width:max-content;animation:marquee 40s linear infinite}
+.tm-card{flex:0 0 340px;border-radius:1.5rem;padding:1.75rem;box-shadow:var(--shadow-luxe)}
+@media(min-width:768px){.tm-card{flex-basis:420px}}
+.tm-card svg{width:24px;height:24px;color:var(--gold);fill:currentColor}
+.tm-card .qt{margin-top:1rem;font-size:15px;line-height:1.7;color:var(--fg-65)}
+.tm-meta{margin-top:1.5rem;display:flex;align-items:center;gap:.75rem}
+.tm-av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);background:linear-gradient(135deg,var(--blush),var(--peach));color:var(--fg-65)}
+.tm-meta .n{font-size:14px;font-weight:500}
+.tm-meta .r{font-size:12px;color:var(--fg-55)}
+
+/* ===== Experience ===== */
+.exp{max-width:80rem;margin:0 auto}
+.exp-card{position:relative;overflow:hidden;border-radius:2.5rem;box-shadow:var(--shadow-luxe)}
+.exp-bg{position:absolute;inset:0;z-index:-1;will-change:transform}
+.exp-bg img{height:120%;width:100%;object-fit:cover}
+.exp-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(255,250,245,.85),rgba(255,250,245,.4),rgba(255,250,245,.1))}
+.exp-inner{position:relative;display:grid;grid-template-columns:1fr;gap:2.5rem;align-items:center;padding:5rem 2rem}
+@media(min-width:768px){.exp-inner{grid-template-columns:1fr 1fr;padding:7rem 4rem}}
+.exp-stage{position:relative;height:360px}
+@media(min-width:768px){.exp-stage{height:460px}}
+.exp-stage img{position:absolute;object-fit:contain}
+.exp-perfume{right:0;top:0;width:16rem;height:16rem;filter:drop-shadow(0 30px 40px rgba(180,130,90,.3))}
+.exp-cream{bottom:0;left:1.5rem;width:14rem;height:14rem;filter:drop-shadow(0 30px 40px rgba(214,185,140,.3))}
+
+/* ===== Newsletter ===== */
+.nl-card{position:relative;overflow:hidden;border-radius:2.5rem;padding:5rem 2rem;text-align:center;box-shadow:var(--shadow-luxe);
+  background:linear-gradient(135deg,#fffaf5 0%,#f6d6d6 35%,#f3d2c1 65%,#e7dff5 100%)}
+@media(min-width:768px){.nl-card{padding:7rem 4rem}}
+.nl-card .glo{position:absolute;width:18rem;height:18rem;border-radius:50%;background:rgba(255,255,255,.4);filter:blur(80px);pointer-events:none}
+.nl-card .glo.a{left:-2.5rem;top:0}
+.nl-card .glo.b{right:-2.5rem;bottom:0}
+.nl-form{margin:2.5rem auto 0;max-width:28rem;display:flex;align-items:center;gap:.5rem;border-radius:999px;padding:.5rem;box-shadow:var(--shadow-luxe)}
+.nl-form input{flex:1;background:transparent;border:none;outline:none;padding:.75rem 1.25rem;font-size:14px;color:var(--fg);font-family:inherit}
+.nl-form input::placeholder{color:var(--fg-45)}
+.nl-form button{background:var(--fg);color:var(--cream);border-radius:999px;padding:.75rem 1.5rem;font-size:14px;transition:background .2s}
+.nl-form button:hover{background:#2b231e}
+
+/* ===== Footer ===== */
+footer{border-top:1px solid var(--fg-10);padding:5rem 1.5rem 2.5rem}
+.f-grid{max-width:80rem;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:3rem}
+@media(min-width:768px){.f-grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+.f-brand{grid-column:span 2;max-width:22rem}
+.f-brand p{margin-top:1rem;font-size:14px;line-height:1.7;color:var(--fg-65)}
+.socials{margin-top:1.5rem;display:flex;gap:.75rem}
+.socials a{width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:all .2s}
+.socials a:hover{transform:translateY(-2px);box-shadow:var(--shadow-luxe)}
+.socials svg{width:16px;height:16px;stroke:var(--fg-65);stroke-width:1.7;fill:none}
+.f-col h4{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--fg-50);font-family:var(--font-sans);font-weight:500}
+.f-col ul{margin-top:1.25rem;list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.f-col a{font-size:14px;color:var(--fg-65);transition:color .2s,transform .2s;display:inline-block}
+.f-col a:hover{color:var(--fg);transform:translateX(2px)}
+.f-bot{max-width:80rem;margin:4rem auto 0;padding-top:2rem;border-top:1px solid var(--fg-10);display:flex;flex-direction:column;gap:1rem;justify-content:space-between;font-size:12px;color:var(--fg-50)}
+@media(min-width:768px){.f-bot{flex-direction:row;align-items:center}}
+.f-bot .lk{display:flex;gap:1.5rem}
+.f-bot a:hover{color:var(--fg)}
+
+/* color helpers */
+.text-gold{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-pill glass shadow-luxe">
+      <span class="brand">Lumière</span><span class="dot"></span>
+    </div>
+    <nav class="nav-links glass shadow-luxe" style="border-radius:999px">
+      <a href="#skincare">Skincare</a><a href="#lipsticks">Lipsticks</a>
+      <a href="#serums">Serums</a><a href="#makeup">Makeup</a><a href="#perfumes">Perfumes</a>
+    </nav>
+    <div class="nav-actions glass shadow-luxe" style="border-radius:999px">
+      <button class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button class="icon-btn" aria-label="Cart"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-dot"></span></button>
+      <button class="icon-btn menu-btn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="hero-grid">
+    <div>
+      <div class="chip glass"><span class="dot"></span>New · Velvet Glow Collection</div>
+      <h1>Beauty That <em>Feels</em> Natural</h1>
+      <p class="lead">Premium skincare and beauty essentials designed for confidence, simplicity, and glow. Crafted with care, made to feel like silk.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary magnetic">Shop Collection</button>
+        <button class="btn btn-ghost magnetic">Discover More</button>
+      </div>
+      <div class="trust">
+        <span>Clean Formulas</span><span class="ln"></span>
+        <span>Dermatologist Tested</span><span class="ln"></span>
+        <span>Cruelty Free</span>
+      </div>
+    </div>
+
+    <div class="hero-stage">
+      <div class="hero-main"><img src="assets/hero-product.png" alt="Luxury serum" /></div>
+      <img class="hero-float-a" src="assets/prod-serum.png" alt="Pink serum" loading="lazy"/>
+      <img class="hero-float-b" src="assets/prod-cream.png" alt="Skincare cream" loading="lazy"/>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED ============ -->
+<section id="skincare" class="block">
+  <div class="container">
+    <div class="feat-head reveal">
+      <div>
+        <p class="eyebrow">Featured Edit</p>
+        <h2 class="title" style="max-width:40rem">The essentials, refined to a glow.</h2>
+      </div>
+      <div class="cats">
+        <button class="cat active">All</button><button class="cat">Skincare</button>
+        <button class="cat">Lipsticks</button><button class="cat">Serums</button>
+        <button class="cat">Makeup Kits</button><button class="cat">Perfumes</button>
+      </div>
+    </div>
+    <div class="prod-grid" id="featGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="block" style="overflow:hidden;position:relative">
+  <div class="blob" style="left:-6rem;top:2.5rem;width:24rem;height:24rem;background:rgba(231,223,245,.5)"></div>
+  <div class="blob" style="right:-5rem;bottom:2.5rem;width:28rem;height:28rem;background:rgba(246,214,214,.4);animation-delay:-8s"></div>
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-img"><img src="assets/about-model.jpg" alt="Glowing natural skin" loading="lazy"/></div>
+      <div class="about-badge glass">
+        <p class="big">12<span>+</span></p>
+        <p style="margin-top:.5rem;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--fg-55)">Years of clean beauty</p>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="eyebrow">Our Story</p>
+      <h2 class="title">Crafted softly.<br/><em>Worn confidently.</em></h2>
+      <p style="margin-top:1.5rem;max-width:32rem;font-size:1rem;line-height:1.7;color:var(--fg-65)">
+        Lumière began in a quiet studio in Seoul with a simple belief: beauty should feel like a deep breath. Every formula is layered with botanical actives, light textures, and the kind of finish that looks like skin — only better.
+      </p>
+      <div class="stat-grid">
+        <div><div class="k">98%</div><div class="v">saw softer skin</div></div>
+        <div><div class="k">Clean</div><div class="v">certified formulas</div></div>
+        <div><div class="k">Refillable</div><div class="v">premium packaging</div></div>
+        <div><div class="k">Vegan</div><div class="v">& cruelty free</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BEST SELLERS ============ -->
+<section class="block" style="padding-left:0;padding-right:0">
+  <div class="bs-head reveal">
+    <div>
+      <p class="eyebrow">Bestsellers</p>
+      <h2 class="title">Loved every morning.</h2>
+    </div>
+    <div class="scroll-btns">
+      <button class="scroll-btn glass" id="bsPrev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="scroll-btn glass" id="bsNext" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+  </div>
+  <div class="bs-scroller" id="bsScroller"></div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="block tm">
+  <div class="tm-bg"></div><div class="tm-glow"></div>
+  <div class="tm-head reveal">
+    <p class="eyebrow">Loved by</p>
+    <h2 class="title">A community of glow.</h2>
+  </div>
+  <div class="tm-track-wrap"><div class="tm-track" id="tmTrack"></div></div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section class="block">
+  <div class="exp">
+    <div class="exp-card">
+      <div class="exp-bg" id="expBg"><img src="assets/experience.jpg" alt="" loading="lazy"/></div>
+      <div class="exp-inner">
+        <div class="reveal">
+          <p class="eyebrow">Beauty Experience</p>
+          <h2 class="title" style="max-width:28rem">A ritual in <em>soft light.</em></h2>
+          <p style="margin-top:1.5rem;max-width:28rem;font-size:1rem;line-height:1.7;color:var(--fg-65)">
+            Slow mornings. Warm cotton. A drop of serum that disappears into skin like sunlight. Lumière is built for the moments you give only to yourself.
+          </p>
+          <button class="btn btn-primary magnetic" style="margin-top:2rem">Explore the Ritual</button>
+        </div>
+        <div class="exp-stage">
+          <img class="exp-perfume parallax" data-speed="-0.15" src="assets/prod-perfume.png" alt="" loading="lazy"/>
+          <img class="exp-cream parallax" data-speed="0.2" src="assets/prod-cream.png" alt="" loading="lazy"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER ============ -->
+<section class="block">
+  <div class="container" style="max-width:72rem">
+    <div class="nl-card reveal">
+      <div class="glo a"></div><div class="glo b"></div>
+      <p class="eyebrow">Letters from Lumière</p>
+      <h2 class="title" style="margin:1rem auto 0;max-width:36rem">Join Our Beauty Community</h2>
+      <p style="margin:1.25rem auto 0;max-width:32rem;font-size:1rem;line-height:1.7;color:var(--fg-65)">
+        Soft rituals, early access, and a 15% welcome offer on your first Lumière essential.
+      </p>
+      <form class="nl-form glass" id="nlForm">
+        <input type="email" required placeholder="your@email.com" aria-label="Email" id="nlEmail"/>
+        <button type="submit" id="nlBtn">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="f-grid">
+    <div class="f-brand">
+      <div style="display:flex;align-items:center;gap:.5rem"><span class="brand" style="font-size:1.5rem">Lumière</span><span class="dot"></span></div>
+      <p>Premium skincare and beauty essentials, designed for the quiet confidence of natural glow.</p>
+      <div class="socials">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.4A4 4 0 1 1 12.6 8 4 4 0 0 1 16 11.4z"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a href="#" aria-label="Youtube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><path d="m9.75 15.02 5.75-3.27-5.75-3.27v6.54z" fill="currentColor"/></svg></a>
+      </div>
+    </div>
+    <div class="f-col"><h4>Shop</h4><ul><li><a href="#">Skincare</a></li><li><a href="#">Lipsticks</a></li><li><a href="#">Serums</a></li><li><a href="#">Makeup</a></li><li><a href="#">Perfumes</a></li></ul></div>
+    <div class="f-col"><h4>Brand</h4><ul><li><a href="#">Our Story</a></li><li><a href="#">Ingredients</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Journal</a></li></ul></div>
+    <div class="f-col"><h4>Help</h4><ul><li><a href="#">Contact</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
+  </div>
+  <div class="f-bot">
+    <p>© <span id="yr"></span> Lumière Beauty. Crafted with care.</p>
+    <div class="lk"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+  </div>
+</footer>
+
+<script>
+// year
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// Particles
+const particles = document.getElementById('particles');
+for(let i=0;i<18;i++){
+  const s=document.createElement('span');
+  const sz=4+(i%4)*2;
+  s.style.cssText=`left:${(i*53)%100}%;top:${(i*37)%100}%;width:${sz}px;height:${sz}px;animation:float-slow ${6+(i%5)}s ease-in-out ${i*.3}s infinite`;
+  particles.appendChild(s);
+}
+
+// Products
+const products = [
+  {name:"Velvet Rose Lip", category:"Lipsticks", price:32, image:"assets/prod-lipstick.png", tone:"blush"},
+  {name:"Silk Glow Cream", category:"Skincare", price:58, image:"assets/prod-cream.png", tone:"beige"},
+  {name:"Petal Renew Serum", category:"Serums", price:72, image:"assets/prod-serum.png", tone:"blush"},
+  {name:"Aurora Eau de Parfum", category:"Perfumes", price:95, image:"assets/prod-perfume.png", tone:"peach"},
+  {name:"Soft Bloom Blush", category:"Makeup Kits", price:44, image:"assets/prod-makeup.png", tone:"peach"},
+];
+function cardHTML(p){
+  return `<div class="card tilt">
+    <div class="card-img tone-${p.tone}"><div class="gr"></div>
+      <img src="${p.image}" alt="${p.name}" loading="lazy"/>
+      <span class="tag">${p.category}</span>
+    </div>
+    <div class="card-meta">
+      <div><h3>${p.name}</h3><p class="sub">Vegan · Cruelty free</p></div>
+      <div><div class="price-old">$${p.price+12}</div><div class="price">$${p.price}</div></div>
+    </div>
+  </div>`;
+}
+document.getElementById('featGrid').innerHTML = products.slice(0,4).map(cardHTML).join('');
+const bs = document.getElementById('bsScroller');
+bs.innerHTML = [...products,...products].map(cardHTML).join('');
+document.getElementById('bsPrev').onclick = ()=>bs.scrollBy({left:-360,behavior:'smooth'});
+document.getElementById('bsNext').onclick = ()=>bs.scrollBy({left:360,behavior:'smooth'});
+
+// Testimonials
+const reviews = [
+  {n:"Amélie R.", r:"Editor, Vogue Paris", t:"It's the closest thing to a deep breath my skin has ever felt. Lumière is now a non-negotiable in my routine."},
+  {n:"Jisoo K.", r:"Skincare Curator", t:"Ingredient-forward without ever feeling clinical. The Silk Glow Cream genuinely glows from within."},
+  {n:"Maya O.", r:"Makeup Artist", t:"Wears like cashmere — buttery, weightless, and the kind of finish clients ask me about all day."},
+  {n:"Clara V.", r:"Bride, 2024", t:"I wore Aurora on my wedding day. Every photo, the light just sits beautifully on my skin."},
+];
+document.getElementById('tmTrack').innerHTML = [...reviews,...reviews].map(r=>`
+  <div class="tm-card glass">
+    <svg viewBox="0 0 24 24"><path d="M7 7h4v4H7a4 4 0 0 1 4-4V3a8 8 0 0 0-8 8v6h8V7zm10 0h4v4h-4a4 4 0 0 1 4-4V3a8 8 0 0 0-8 8v6h8V7z"/></svg>
+    <p class="qt">"${r.t}"</p>
+    <div class="tm-meta">
+      <div class="tm-av">${r.n.charAt(0)}</div>
+      <div><div class="n">${r.n}</div><div class="r">${r.r}</div></div>
+    </div>
+  </div>`).join('');
+
+// Cursor glow
+const cg = document.getElementById('cursorGlow');
+let tx=0,ty=0,cx=0,cy=0;
+window.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
+function tick(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;cg.style.transform=`translate3d(${cx-200}px,${cy-200}px,0)`;requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
+
+// Magnetic buttons
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)*.25;
+    const dy=(e.clientY-r.top-r.height/2)*.25;
+    btn.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+
+// Tilt on cards
+document.querySelectorAll('.tilt').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width-.5;
+    const py=(e.clientY-r.top)/r.height-.5;
+    c.style.transform=`translateY(-8px) perspective(900px) rotateX(${-py*10}deg) rotateY(${px*10}deg)`;
+  });
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+});
+
+// Category active toggle
+document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+}));
+
+// Reveal on scroll
+const io = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'-50px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Parallax
+const parallaxEls = document.querySelectorAll('.parallax');
+const expBg = document.getElementById('expBg');
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  parallaxEls.forEach(el=>{
+    const r=el.getBoundingClientRect();
+    const sp=parseFloat(el.dataset.speed||0);
+    const off=(window.innerHeight/2 - (r.top+r.height/2))*sp;
+    el.style.transform=`translateY(${off}px)`;
+  });
+  if(expBg){
+    const r=expBg.getBoundingClientRect();
+    const off=(window.innerHeight/2-(r.top+r.height/2))*.05;
+    expBg.style.transform=`translateY(${off}px)`;
+  }
+},{passive:true});
+
+// Newsletter
+document.getElementById('nlForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(document.getElementById('nlEmail').value){
+    document.getElementById('nlBtn').textContent='Thank you ✦';
+  }
+});
+</script>
+</body>
+</html>
