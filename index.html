@@ -311,7 +311,12 @@ header {
   transform: translate(-50%,-50%);
   animation: floatAlt 7s ease-in-out infinite;
 }
-.hero-main-img img { width:100%; height:100%; object-fit:contain; drop-shadow: 0 40px 60px rgba(180,130,90,0.25); filter:drop-shadow(0 40px 60px rgba(180,130,90,0.25)); }
+.hero-main-img img { 
+  width:100%; height:100%; 
+  object-fit:contain; 
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 40px 60px rgba(180,130,90,0.35)) contrast(1.05);
+}
 .hero-serum {
   position:absolute; left:0; top:2.5rem;
   width:160px; height:160px;
@@ -975,11 +980,11 @@ footer {
 /* ─── Data ─── */
 const BASE = "https://raw.githubusercontent.com/Hitu-code23/cream-blush-dreams/main/src/assets/";
 const products = [
-  { name:"Velvet Rose Lip",   category:"Lipsticks",   price:32, image: BASE+"prod-lipstick.png", tone:"blush" },
-  { name:"Silk Glow Cream",   category:"Skincare",    price:58, image: BASE+"prod-cream.png",    tone:"beige" },
-  { name:"Petal Renew Serum", category:"Serums",      price:72, image: BASE+"prod-serum.png",    tone:"blush" },
-  { name:"Aurora Eau de Parfum", category:"Perfumes", price:95, image: BASE+"prod-perfume.png",  tone:"peach" },
-  { name:"Soft Bloom Blush",  category:"Makeup Kits", price:44, image: BASE+"prod-makeup.png",   tone:"peach" },
+  { name:"Velvet Rose Lip",      category:"Lipsticks",   price:32, image: BASE+"prod-lipstick.png", tone:"blush" },
+  { name:"Silk Glow Cream",      category:"Skincare",    price:58, image: BASE+"prod-cream.png",    tone:"beige" },
+  { name:"Petal Renew Serum",    category:"Serums",      price:72, image: BASE+"prod-serum.png",    tone:"blush" },
+  { name:"Aurora Eau de Parfum", category:"Perfumes",    price:95, image: BASE+"prod-perfume.png",  tone:"peach" },
+  { name:"Soft Bloom Blush",     category:"Makeup Kits", price:44, image: BASE+"prod-makeup.png",   tone:"peach" },
 ];
 const reviews = [
   { name:"Amélie R.",  role:"Editor, Vogue Paris",  text:"It's the closest thing to a deep breath my skin has ever felt. Lumière is now a non-negotiable in my routine." },
@@ -988,9 +993,164 @@ const reviews = [
   { name:"Clara V.",   role:"Bride, 2024",           text:"I wore Aurora on my wedding day. Every photo, the light just sits beautifully on my skin." },
 ];
 
+/* ─── Smooth Scroll helper ─── */
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ─── Cart state ─── */
+let cart = [];
+function addToCart(name, price) {
+  cart.push({ name, price });
+  updateCartBadge();
+  showToast(`Added "${name}" to cart ✦`);
+}
+function updateCartBadge() {
+  const dot = document.querySelector('.cart-dot');
+  if (dot) dot.style.background = cart.length ? '#d6b98c' : '#d6b98c';
+  const badge = document.getElementById('cart-count');
+  if (badge) { badge.textContent = cart.length; badge.style.display = cart.length ? 'flex' : 'none'; }
+}
+
+/* ─── Toast notification ─── */
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = `position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);
+      background:rgba(61,46,34,0.95);color:#fffaf5;padding:0.875rem 1.75rem;
+      border-radius:9999px;font-size:0.875rem;letter-spacing:0.03em;
+      box-shadow:0 20px 40px rgba(0,0,0,0.2);z-index:9999;
+      transition:transform 0.4s cubic-bezier(0.22,1,0.36,1),opacity 0.4s;opacity:0;
+      white-space:nowrap;font-family:'Inter',sans-serif;`;
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => {
+    t.style.transform = 'translateX(-50%) translateY(80px)';
+    t.style.opacity = '0';
+  }, 2800);
+}
+
+/* ─── Cart modal ─── */
+function openCart() {
+  let modal = document.getElementById('cart-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'cart-modal';
+    modal.style.cssText = `position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;
+      justify-content:flex-end;pointer-events:none;`;
+    modal.innerHTML = `
+      <div id="cart-backdrop" style="position:absolute;inset:0;background:rgba(61,46,34,0.25);
+        backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s;pointer-events:auto;" onclick="closeCart()"></div>
+      <div id="cart-panel" style="position:relative;width:min(420px,100vw);height:100vh;
+        background:#fffaf5;box-shadow:-20px 0 60px rgba(170,130,100,0.2);
+        padding:2rem 1.75rem;overflow-y:auto;transform:translateX(100%);
+        transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);pointer-events:auto;
+        font-family:'Inter',sans-serif;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;">Your Cart</h3>
+          <button onclick="closeCart()" style="cursor:pointer;width:36px;height:36px;border-radius:50%;
+            border:1px solid rgba(61,46,34,0.15);background:#fff;display:grid;place-items:center;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="cart-items" style="display:flex;flex-direction:column;gap:1rem;"></div>
+        <div id="cart-empty" style="text-align:center;padding:4rem 0;color:rgba(61,46,34,0.45);font-size:0.9rem;">
+          Your cart is empty.<br><span style="font-size:1.5rem;margin-top:0.5rem;display:block;">✦</span>
+        </div>
+        <div id="cart-footer" style="display:none;margin-top:2rem;border-top:1px solid rgba(61,46,34,0.1);padding-top:1.5rem;">
+          <div id="cart-total" style="display:flex;justify-content:space-between;font-size:1rem;margin-bottom:1.5rem;">
+            <span>Total</span><span style="font-family:'Playfair Display',serif;font-size:1.25rem;"></span>
+          </div>
+          <button onclick="checkout()" style="width:100%;border-radius:9999px;background:#3d2e22;color:#fffaf5;
+            padding:1rem;font-size:0.9rem;font-family:'Inter',sans-serif;cursor:pointer;
+            letter-spacing:0.04em;transition:background 0.2s;" 
+            onmouseover="this.style.background='rgba(61,46,34,0.85)'" 
+            onmouseout="this.style.background='#3d2e22'">
+            Checkout ✦
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  renderCartItems();
+  modal.style.pointerEvents = 'auto';
+  requestAnimationFrame(() => {
+    document.getElementById('cart-backdrop').style.opacity = '1';
+    document.getElementById('cart-panel').style.transform = 'translateX(0)';
+  });
+}
+function closeCart() {
+  const backdrop = document.getElementById('cart-backdrop');
+  const panel = document.getElementById('cart-panel');
+  if (!backdrop) return;
+  backdrop.style.opacity = '0';
+  panel.style.transform = 'translateX(100%)';
+  setTimeout(() => { const m = document.getElementById('cart-modal'); if(m) m.style.pointerEvents = 'none'; }, 400);
+}
+function renderCartItems() {
+  const container = document.getElementById('cart-items');
+  const empty = document.getElementById('cart-empty');
+  const footer = document.getElementById('cart-footer');
+  if (!container) return;
+  if (cart.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'block';
+    footer.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+    footer.style.display = 'block';
+    container.innerHTML = cart.map((item, i) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;
+        padding:0.875rem;border-radius:1rem;background:#fff;
+        box-shadow:0 4px 12px rgba(170,130,100,0.1);">
+        <div>
+          <div style="font-size:0.9rem;font-weight:500;">${item.name}</div>
+          <div style="font-size:0.8rem;color:rgba(61,46,34,0.55);margin-top:0.2rem;">$${item.price}</div>
+        </div>
+        <button onclick="removeFromCart(${i})" style="cursor:pointer;width:28px;height:28px;border-radius:50%;
+          border:1px solid rgba(61,46,34,0.15);background:transparent;display:grid;place-items:center;
+          color:rgba(61,46,34,0.5);">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>`).join('');
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    document.querySelector('#cart-total span:last-child').textContent = `$${total}`;
+  }
+}
+function removeFromCart(i) {
+  cart.splice(i, 1);
+  updateCartBadge();
+  renderCartItems();
+}
+function checkout() {
+  showToast('Order placed! Thank you for shopping with Lumière ✦');
+  cart = [];
+  updateCartBadge();
+  closeCart();
+}
+
 /* ─── Product Card HTML ─── */
-function cardHTML(p) {
+function cardHTML(p, showBtn = true) {
   const old = p.price + 12;
+  const btnHTML = showBtn ? `
+    <button class="add-to-cart-btn" onclick="addToCart('${p.name}',${p.price})"
+      style="width:100%;margin-top:1rem;border-radius:9999px;
+        background:#3d2e22;color:#fffaf5;padding:0.625rem;
+        font-size:0.8rem;font-family:'Inter',sans-serif;cursor:pointer;
+        letter-spacing:0.04em;transition:background 0.2s;"
+      onmouseover="this.style.background='rgba(61,46,34,0.82)'"
+      onmouseout="this.style.background='#3d2e22'">
+      Add to Cart
+    </button>` : '';
   return `
   <div class="product-card">
     <div class="product-img-wrap tone-${p.tone}">
@@ -1008,6 +1168,7 @@ function cardHTML(p) {
         <div class="current">$${p.price}</div>
       </div>
     </div>
+    ${btnHTML}
   </div>`;
 }
 
@@ -1016,7 +1177,12 @@ let activeFilter = 'All';
 function renderFeatured() {
   const grid = document.getElementById('featured-grid');
   const filtered = activeFilter === 'All' ? products.slice(0,4) : products.filter(p => p.category === activeFilter);
-  grid.innerHTML = filtered.map(cardHTML).join('');
+  const display = filtered.length ? filtered : products;
+  grid.innerHTML = display.map(p => cardHTML(p)).join('');
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:4rem 0;color:rgba(61,46,34,0.45);">
+      No products in this category yet ✦</div>`;
+  }
   observeReveal();
 }
 function setFilter(btn, cat) {
@@ -1054,6 +1220,148 @@ function renderTesti() {
       </div>
     </div>
   </div>`).join('');
+}
+
+/* ─── Nav mobile menu ─── */
+function toggleMobileMenu() {
+  let menu = document.getElementById('mobile-menu');
+  if (!menu) {
+    menu = document.createElement('div');
+    menu.id = 'mobile-menu';
+    menu.style.cssText = `position:fixed;inset:0;z-index:100;background:rgba(255,250,245,0.97);
+      backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;
+      justify-content:center;gap:2rem;font-family:'Playfair Display',serif;font-size:1.75rem;
+      transform:translateY(-100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);`;
+    const links = ['Skincare','Lipsticks','Serums','Makeup','Perfumes'];
+    menu.innerHTML = `
+      <button onclick="toggleMobileMenu()" style="position:absolute;top:1.5rem;right:1.5rem;cursor:pointer;
+        width:44px;height:44px;border-radius:50%;border:1px solid rgba(61,46,34,0.15);background:#fff;
+        display:grid;place-items:center;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      ${links.map(l => `<a href="#featured" onclick="toggleMobileMenu()" 
+        style="color:#3d2e22;text-decoration:none;transition:color 0.2s;"
+        onmouseover="this.style.color='rgba(61,46,34,0.6)'" onmouseout="this.style.color='#3d2e22'">${l}</a>`).join('')}`;
+    document.body.appendChild(menu);
+  }
+  const open = menu.style.transform === 'translateY(0px)' || menu.style.transform === 'translateY(0)';
+  menu.style.transform = open ? 'translateY(-100%)' : 'translateY(0)';
+}
+
+/* ─── Search modal ─── */
+function openSearch() {
+  let modal = document.getElementById('search-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'search-modal';
+    modal.style.cssText = `position:fixed;inset:0;z-index:200;display:flex;align-items:flex-start;
+      justify-content:center;padding-top:8rem;pointer-events:none;`;
+    modal.innerHTML = `
+      <div style="position:absolute;inset:0;background:rgba(61,46,34,0.2);backdrop-filter:blur(8px);
+        pointer-events:auto;" onclick="closeSearch()"></div>
+      <div style="position:relative;width:min(540px,90vw);background:#fffaf5;border-radius:1.5rem;
+        padding:1.5rem;box-shadow:0 40px 80px rgba(170,130,100,0.25);pointer-events:auto;
+        transform:translateY(-20px);opacity:0;transition:all 0.35s cubic-bezier(0.22,1,0.36,1);" id="search-box">
+        <div style="display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(61,46,34,0.1);padding-bottom:1rem;">
+          <svg width="18" height="18" fill="none" stroke="rgba(61,46,34,0.4)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="search-input" placeholder="Search products…" autofocus
+            style="flex:1;border:none;outline:none;background:transparent;font-size:1rem;
+              font-family:'Inter',sans-serif;color:#3d2e22;"
+            oninput="handleSearch(this.value)" />
+          <button onclick="closeSearch()" style="cursor:pointer;background:none;border:none;color:rgba(61,46,34,0.4);">✕</button>
+        </div>
+        <div id="search-results" style="padding-top:1rem;max-height:320px;overflow-y:auto;"></div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  modal.style.pointerEvents = 'auto';
+  requestAnimationFrame(() => {
+    const box = document.getElementById('search-box');
+    box.style.transform = 'translateY(0)';
+    box.style.opacity = '1';
+    document.getElementById('search-input').focus();
+    handleSearch('');
+  });
+}
+function closeSearch() {
+  const box = document.getElementById('search-box');
+  if (!box) return;
+  box.style.transform = 'translateY(-20px)';
+  box.style.opacity = '0';
+  setTimeout(() => { const m = document.getElementById('search-modal'); if(m) m.style.pointerEvents='none'; }, 350);
+}
+function handleSearch(q) {
+  const results = document.getElementById('search-results');
+  const matches = q ? products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.category.toLowerCase().includes(q.toLowerCase())) : products;
+  results.innerHTML = matches.length
+    ? matches.map(p => `
+      <div onclick="addToCart('${p.name}',${p.price});closeSearch();"
+        style="display:flex;align-items:center;gap:1rem;padding:0.75rem;border-radius:1rem;
+          cursor:pointer;transition:background 0.15s;"
+        onmouseover="this.style.background='rgba(246,214,214,0.3)'"
+        onmouseout="this.style.background='transparent'">
+        <img src="${p.image}" style="width:48px;height:48px;object-fit:contain;border-radius:0.5rem;background:${p.tone==='blush'?'#f6d6d6':'#f3d2c1'};" />
+        <div>
+          <div style="font-size:0.9rem;font-weight:500;">${p.name}</div>
+          <div style="font-size:0.75rem;color:rgba(61,46,34,0.5);">${p.category} · $${p.price}</div>
+        </div>
+      </div>`).join('')
+    : `<p style="text-align:center;padding:2rem;color:rgba(61,46,34,0.45);font-size:0.875rem;">No results for "${q}"</p>`;
+}
+
+/* ─── Wire Nav Buttons ─── */
+function wireNavButtons() {
+  // Search
+  document.querySelector('[aria-label="Search"]').addEventListener('click', openSearch);
+  // Cart
+  document.querySelector('[aria-label="Cart"]').addEventListener('click', openCart);
+  // Mobile menu
+  const menuBtn = document.querySelector('[aria-label="Menu"]');
+  if (menuBtn) menuBtn.addEventListener('click', toggleMobileMenu);
+
+  // Add cart count badge to cart button
+  const cartBtn = document.querySelector('[aria-label="Cart"]');
+  const badge = document.createElement('span');
+  badge.id = 'cart-count';
+  badge.style.cssText = `position:absolute;top:-2px;right:-2px;
+    background:#3d2e22;color:#fffaf5;
+    width:16px;height:16px;border-radius:50%;
+    font-size:9px;display:none;align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;font-weight:600;`;
+  cartBtn.appendChild(badge);
+
+  // Hero buttons
+  document.querySelector('.btn-primary').addEventListener('click', () => scrollTo('featured'));
+  document.querySelector('.btn-ghost').addEventListener('click', () => scrollTo('about'));
+
+  // Nav links smooth scroll
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const href = a.getAttribute('href').replace('#','');
+      scrollTo(href || 'featured');
+    });
+  });
+
+  // Experience button
+  document.querySelector('#experience .btn-primary').addEventListener('click', () => {
+    scrollTo('featured');
+    showToast('Explore our full ritual collection ✦');
+  });
+
+  // Footer logo scroll to top
+  document.querySelector('.footer-logo').style.cursor = 'pointer';
+  document.querySelector('.footer-logo').addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+  // Footer nav links
+  document.querySelectorAll('.footer-col a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      scrollTo('featured');
+    });
+  });
 }
 
 /* ─── Particles ─── */
@@ -1110,6 +1418,8 @@ function submitNl(e) {
   const btn = document.getElementById('nl-btn');
   btn.textContent = 'Thank you ✦';
   btn.disabled = true;
+  btn.style.background = 'rgba(61,46,34,0.5)';
+  showToast('Welcome to the Lumière community! 15% off is on its way ✦');
 }
 
 /* ─── Footer year ─── */
@@ -1122,6 +1432,7 @@ renderTesti();
 renderParticles();
 observeReveal();
 applyTrust();
+wireNavButtons();
 window.addEventListener('resize', applyTrust);
 </script>
 </body>
