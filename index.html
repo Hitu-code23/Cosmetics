@@ -1080,7 +1080,10 @@ function openCart() {
     document.body.appendChild(modal);
   }
   renderCartItems();
+  modal.style.display = 'flex';
   modal.style.pointerEvents = 'auto';
+  const bd = document.getElementById('cart-backdrop');
+  if (bd) bd.style.pointerEvents = 'auto';
   requestAnimationFrame(() => {
     document.getElementById('cart-backdrop').style.opacity = '1';
     document.getElementById('cart-panel').style.transform = 'translateX(0)';
@@ -1091,8 +1094,15 @@ function closeCart() {
   const panel = document.getElementById('cart-panel');
   if (!backdrop) return;
   backdrop.style.opacity = '0';
+  backdrop.style.pointerEvents = 'none';
   panel.style.transform = 'translateX(100%)';
-  setTimeout(() => { const m = document.getElementById('cart-modal'); if(m) m.style.pointerEvents = 'none'; }, 400);
+  setTimeout(() => {
+    const m = document.getElementById('cart-modal');
+    if (m) {
+      m.style.pointerEvents = 'none';
+      m.style.display = 'none';
+    }
+  }, 420);
 }
 function renderCartItems() {
   const container = document.getElementById('cart-items');
