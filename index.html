@@ -301,10 +301,16 @@ header {
   animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.4s both;
 }
 
+@keyframes slideRight {
+  from { transform: translateX(-4px); opacity: 0.5; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.625rem;
   border-radius: 9999px;
   padding: 0.875rem 1.75rem;
   font-size: 0.875rem;
@@ -313,29 +319,54 @@ header {
   background: var(--fg-hex);
   color: var(--cream-hex);
   box-shadow: 0 20px 40px -15px rgba(170,130,100,0.25);
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
   min-height: 48px;
 }
-.btn-primary:hover { background: rgba(61,46,34,0.85); transform: translateY(-2px); }
+.btn-primary:hover { 
+  background: rgba(61,46,34,0.85); 
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -15px rgba(170,130,100,0.35);
+}
+.btn-primary:hover .btn-icon {
+  animation: slideRight 0.4s cubic-bezier(0.22,1,0.36,1);
+}
 .btn-primary:active { transform: translateY(0); }
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
 
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.625rem;
   border-radius: 9999px;
   padding: 0.875rem 1.75rem;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.03em;
-  border: 1px solid rgba(61,46,34,0.2);
-  background: rgba(255,255,255,0.6);
+  border: 1.5px solid rgba(61,46,34,0.25);
+  background: rgba(255,255,255,0.7);
   color: var(--fg-hex);
-  backdrop-filter: blur(8px);
-  transition: background 0.2s, transform 0.2s;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
   min-height: 48px;
 }
-.btn-ghost:hover { background: #fff; transform: translateY(-2px); }
+.btn-ghost:hover { 
+  background: #fff;
+  border-color: rgba(61,46,34,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px -10px rgba(170,130,100,0.2);
+}
+.btn-ghost:hover .btn-icon {
+  animation: slideRight 0.4s cubic-bezier(0.22,1,0.36,1);
+}
 .btn-ghost:active { transform: translateY(0); }
 
 .hero-trust {
@@ -364,16 +395,86 @@ header {
 .proof-badge {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(255,255,255,0.55);
+  gap: 0.625rem;
+  background: rgba(255,255,255,0.7);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1.5px solid rgba(255,255,255,0.7);
   border-radius: 9999px;
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  color: rgba(61,46,34,0.7);
+  padding: 0.625rem 1.125rem;
+  font-size: 0.8rem;
+  color: rgba(61,46,34,0.75);
+  font-weight: 500;
+  transition: all 0.3s;
 }
-.proof-badge .icon { font-size: 1.1rem; }
+.proof-badge:hover {
+  background: #fff;
+  border-color: var(--gold-hex);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(170,130,100,0.15);
+}
+.proof-badge .icon { 
+  font-size: 1rem;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Featured In Section ── */
+.featured-in {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(61,46,34,0.1);
+  animation: fadeUp 1.1s cubic-bezier(0.22,1,0.36,1) 1s both;
+}
+.featured-in-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(61,46,34,0.5);
+  margin-bottom: 1rem;
+}
+.featured-in-logos {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.featured-logo {
+  height: 24px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  filter: grayscale(100%);
+}
+.featured-logo:hover {
+  opacity: 0.95;
+  filter: grayscale(0%);
+}
+
+/* ── Scroll Indicator ── */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s ease-in-out infinite;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+.scroll-indicator:hover {
+  opacity: 1;
+}
+.scroll-indicator svg {
+  width: 24px;
+  height: 24px;
+  color: rgba(61,46,34,0.4);
+}
 
 /* Hero product visual – mobile: simplified, desktop: full float */
 .hero-products {
@@ -924,12 +1025,21 @@ section { padding: 4rem 1rem; }
   padding:0.875rem 1.5rem;
   font-size:0.875rem;
   font-family:inherit;
-  transition:background 0.2s;
+  transition:all 0.2s;
   white-space:nowrap;
   min-height: 48px;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  letter-spacing: 0.03em;
 }
-.nl-form button:hover { background:rgba(61,46,34,0.85); }
+.nl-form button:hover { 
+  background:rgba(61,46,34,0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(170,130,100,0.2);
+}
 
 /* ── Footer ── */
 footer {
@@ -1183,6 +1293,10 @@ footer {
   cursor: pointer;
   transition: all 0.2s;
   min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 .modal-cta .btn-add {
   background: var(--fg-hex);
@@ -1191,14 +1305,34 @@ footer {
 }
 .modal-cta .btn-add:hover {
   background: rgba(61,46,34,0.85);
+  box-shadow: 0 10px 25px rgba(170,130,100,0.2);
+  transform: translateY(-1px);
+}
+.modal-cta .btn-add svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s;
+}
+.modal-cta .btn-add:hover svg {
+  transform: scale(1.1);
 }
 .modal-cta .btn-wishlist {
   background: rgba(246,214,214,0.3);
   color: var(--fg-hex);
-  border: 1px solid rgba(246,214,214,0.5);
+  border: 1.5px solid rgba(246,214,214,0.5);
 }
 .modal-cta .btn-wishlist:hover {
   background: rgba(246,214,214,0.5);
+  border-color: rgba(246,214,214,0.8);
+  transform: scale(1.02);
+}
+.modal-cta .btn-wishlist svg {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s;
+}
+.modal-cta .btn-wishlist:hover svg {
+  transform: scale(1.2) rotate(10deg);
 }
 
 /* ── Live Chat Widget ── */
@@ -1560,8 +1694,18 @@ footer {
       <h1 class="hero-h1">Beauty That <em>Feels</em> Natural</h1>
       <p class="hero-p">Premium skincare and beauty essentials designed for confidence, simplicity, and glow.</p>
       <div class="hero-ctas">
-        <button class="btn-primary">Shop Collection</button>
-        <button class="btn-ghost">Discover More</button>
+        <button class="btn-primary">
+          <span class="btn-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </span>
+          Shop Collection
+        </button>
+        <button class="btn-ghost">
+          <span>Discover More</span>
+          <span class="btn-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </button>
       </div>
       <div class="hero-trust">
         <span>Clean Formulas</span>
@@ -1572,17 +1716,40 @@ footer {
       </div>
       <div class="social-proof-badges">
         <div class="proof-badge">
-          <span class="icon">✦</span>
+          <span class="icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
           <span>1000+ Happy Customers</span>
         </div>
         <div class="proof-badge">
-          <span class="icon">★</span>
+          <span class="icon">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </span>
           <span>4.9/5 Trustpilot</span>
         </div>
         <div class="proof-badge">
-          <span class="icon">⚡</span>
+          <span class="icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 0l4.24-4.24M1 12h6m6 0h6m-1.78 7.78l-4.24-4.24m-5.08 0l-4.24 4.24"/></svg>
+          </span>
           <span>Ships in 24 hours</span>
         </div>
+      </div>
+
+      <div class="featured-in">
+        <p class="featured-in-label">As featured in</p>
+        <div class="featured-in-logos">
+          <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(61,46,34,0.5); font-weight:600;">VOGUE</span>
+          <span style="width:1px;height:20px;background:rgba(61,46,34,0.1);"></span>
+          <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(61,46,34,0.5); font-weight:600;">HARPER'S BAZAAR</span>
+          <span style="width:1px;height:20px;background:rgba(61,46,34,0.1);"></span>
+          <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(61,46,34,0.5); font-weight:600;">ELLE</span>
+          <span style="width:1px;height:20px;background:rgba(61,46,34,0.1);"></span>
+          <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(61,46,34,0.5); font-weight:600;">ALLURE</span>
+        </div>
+      </div>
+
+      <div class="scroll-indicator" onclick="scrollTo('featured')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="12 5 12 19"/><polyline points="19 12 12 19 5 12"/></svg>
       </div>
     </div>
     <div class="hero-products">
@@ -1701,7 +1868,12 @@ footer {
           <p style="margin-top:1.25rem;font-size:0.9375rem;line-height:1.75;color:rgba(61,46,34,0.65);">
             Slow mornings. Warm cotton. A drop of serum that disappears into skin like sunlight.
           </p>
-          <button class="btn-primary" id="exp-btn" style="margin-top:1.75rem;">Explore the Ritual</button>
+          <button class="btn-primary" id="exp-btn" style="margin-top:1.75rem;">
+            <span class="btn-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M12 6v6l4 2"/></svg>
+            </span>
+            Explore the Ritual
+          </button>
         </div>
         <div class="exp-products">
           <img class="exp-perfume" src="https://raw.githubusercontent.com/Hitu-code23/cream-blush-dreams/main/src/assets/prod-perfume.png" alt="" loading="lazy" />
@@ -1829,8 +2001,14 @@ footer {
         <div class="how-to-use" id="modal-how-to-use"></div>
         
         <div class="modal-cta">
-          <button class="btn-add" onclick="addModalToCart()">Add to Cart</button>
-          <button class="btn-wishlist" onclick="addToWishlist()">♡ Wishlist</button>
+          <button class="btn-add" onclick="addModalToCart()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Add to Cart
+          </button>
+          <button class="btn-wishlist" onclick="addToWishlist()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Wishlist
+          </button>
         </div>
       </div>
     </div>
